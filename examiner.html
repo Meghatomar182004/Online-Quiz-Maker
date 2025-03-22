@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examiner Panel</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <a ref="login.hmtl"></a>
+    <div class="container">
+        <h1>Examiner Panel</h1>
+        <input type="text" id="question" placeholder="Enter Question">
+        <input type="text" id="option1" placeholder="Option 1">
+        <input type="text" id="option2" placeholder="Option 2">
+        <input type="text" id="option3" placeholder="Option 3">
+        <input type="text" id="option4" placeholder="Option 4">
+        <input type="number" id="correctOption" placeholder="Correct Option (1-4)">
+        <button onclick="addQuestion()">Add Question</button>
+        <button onclick="location.href='index.html'">Back to Home</button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    localStorage.removeItem("questions"); // Clears old questions when the page loads
+});
+
+function addQuestion() {
+    let question = document.getElementById("question").value;
+    let options = [
+        document.getElementById("option1").value,
+        document.getElementById("option2").value,
+        document.getElementById("option3").value,
+        document.getElementById("option4").value
+    ];
+    let correctOption = parseInt(document.getElementById("correctOption").value) - 1;
+
+    if (!question || options.some(opt => !opt) || correctOption < 0 || correctOption > 3) {
+        alert("Please fill all fields correctly!");
+        return;
+    }
+
+    let questions = JSON.parse(localStorage.getItem("questions")) || [];
+    questions.push({ question, options, correctOption });
+    localStorage.setItem("questions", JSON.stringify(questions));
+
+    alert("Question added successfully!");
+    
+    // Clear input fields
+    document.getElementById("question").value = "";
+    document.getElementById("option1").value = "";
+    document.getElementById("option2").value = "";
+    document.getElementById("option3").value = "";
+    document.getElementById("option4").value = "";
+    document.getElementById("correctOption").value = "";
+}
+
+    </script>
+</body>
+</html>

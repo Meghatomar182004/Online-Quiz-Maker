@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Quiz</h1>
+        <div id="quiz-container"></div>
+        <button id="next-btn" onclick="nextQuestion()">Next</button>
+        <button onclick="location.href='index.html'">Back to Home</button>
+    </div>
+
+    <script>
+        let questions = JSON.parse(localStorage.getItem("questions")) || [];
+let currentQuestionIndex = 0;
+let score = 0;
+
+document.addEventListener("DOMContentLoaded", function () {
+    if (questions.length === 0) {
+        alert("No questions available! Please add questions first.");
+        window.location.href = "index.html";
+        return;
+    }
+    loadQuestion();
+});
+
+function loadQuestion() {
+    let quizContainer = document.getElementById("quiz-container");
+    quizContainer.innerHTML = "";
+
+    let questionObj = questions[currentQuestionIndex];
+
+    let questionElement = document.createElement("h2");
+    questionElement.innerText = questionObj.question;
+    quizContainer.appendChild(questionElement);
+
+    questionObj.options.forEach((option, index) => {
+        let button = document.createElement("button");
+        button.innerText = option;
+        button.onclick = function () {
+            checkAnswer(index);
+        };
+        quizContainer.appendChild(button);
+    });
+}
+
+function checkAnswer(selectedIndex) {
+    if (selectedIndex === questions[currentQuestionIndex].correctOption) {
+        score++;
+    }
+
+    currentQuestionIndex++;
+    if (currentQuestionIndex < questions.length) {
+        loadQuestion();
+    } else {
+        localStorage.setItem("score", score);
+        window.location.href = "score.html";
+    }
+}
+
+    </script>
+</body>
+</html>

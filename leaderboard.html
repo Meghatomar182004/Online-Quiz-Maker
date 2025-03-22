@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Leaderboard</h1>
+        <table id="leaderboard">
+            <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Score</th>
+            </tr>
+        </table>
+        <button onclick="location.href='index.html'">Back to Home</button>
+    </div>
+
+    <script>
+        function generateRandomPlayers(maxScore) {
+            let randomPlayers = [
+                { name: "Alice", score: Math.floor(Math.random() * (maxScore + 1)) },
+                { name: "Bob", score: Math.floor(Math.random() * (maxScore + 1)) },
+                { name: "Charlie", score: Math.floor(Math.random() * (maxScore + 1)) }
+            ];
+            return randomPlayers;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            let totalQuestions = JSON.parse(localStorage.getItem("questions"))?.length || 10; // Default to 10 if not set
+            let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+
+            // Ensure existing scores don't exceed max
+            leaderboard.forEach(player => {
+                if (player.score > totalQuestions) {
+                    player.score = totalQuestions;
+                }
+            });
+
+            // Add random players but limit scores within totalQuestions
+            leaderboard = leaderboard.concat(generateRandomPlayers(totalQuestions));
+            leaderboard.sort((a, b) => b.score - a.score);
+            localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+
+            let table = document.getElementById("leaderboard");
+            leaderboard.forEach((player, index) => {
+                let row = table.insertRow();
+                row.innerHTML = `<td>${index + 1}</td><td>${player.name}</td><td>${player.score}</td>`;
+            });
+        });
+    </script>
+</body>
+</html>

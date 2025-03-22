@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Your Score</h1>
+        <h2 id="score"></h2>
+        <h3 id="performance"></h3>
+        <input type="text" id="playerName" placeholder="Enter your name">
+        <button onclick="saveScore()">Save & View Leaderboard</button>
+        <button onclick="location.href='index.html'">Back to Home</button>
+    </div>
+
+    <script>
+        let score = localStorage.getItem("score") || 0;
+        let totalQuestions = JSON.parse(localStorage.getItem("questions"))?.length || 0;
+        document.getElementById("score").innerText = `You scored: ${score}`;
+        document.getElementById("performance").innerText = `You answered ${score} out of ${totalQuestions} correctly.`;
+
+        function saveScore() {
+            let playerName = document.getElementById("playerName").value.trim();
+            if (!playerName) {
+                alert("Please enter your name!");
+                return;
+            }
+
+            let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+            leaderboard.push({ name: playerName, score: parseInt(score) });
+            leaderboard.sort((a, b) => b.score - a.score);
+            localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+
+            window.location.href = "leaderboard.html";
+        }
+    </script>
+</body>
+</html>
